@@ -8,7 +8,7 @@ fn num(n: usize) -> String {
     }
 }
 
-fn str0(h: &HashMap<char, String>, s: &str) -> String {
+fn str_static(h: &HashMap<char, String>, s: &str) -> String {
     s.chars()
         .map(|x| h.get(&x).unwrap().to_owned())
         .collect::<Vec<_>>()
@@ -18,8 +18,8 @@ fn str0(h: &HashMap<char, String>, s: &str) -> String {
 fn char(h: &HashMap<char, String>, c: char) -> String {
     format!(
         "([]+[])[{}][{}]({})",
-        str0(h, "constructor"),
-        str0(h, "fromCharCode"),
+        str_static(h, "constructor"),
+        str_static(h, "fromCharCode"),
         num(c as u32 as usize)
     )
 }
@@ -48,35 +48,35 @@ pub fn transpile(code: &str) -> String {
     mp.insert('n', format!("((+!![]/+[])+[])[{}]", num(4)));
     mp.insert(
         'S',
-        format!("([]+([]+[])[{}])[{}]", str0(&mp, "constructor"), num(9)),
+        format!("([]+([]+[])[{}])[{}]", str_static(&mp, "constructor"), num(9)),
     );
     mp.insert(
         'g',
-        format!("([]+([]+[])[{}])[{}]", str0(&mp, "constructor"), num(14)),
+        format!("([]+([]+[])[{}])[{}]", str_static(&mp, "constructor"), num(14)),
     );
     mp.insert(
         'p',
-        format!("([]+(/-/)[{}])[{}]", str0(&mp, "constructor"), num(14)),
+        format!("([]+(/-/)[{}])[{}]", str_static(&mp, "constructor"), num(14)),
     );
     mp.insert('\\', format!("(/\\\\/+[])[{}]", num(1)));
     mp.insert(
         'd',
-        format!("({})[{}]({})", num(13), str0(&mp, "toString"), num(14)),
+        format!("({})[{}]({})", num(13), str_static(&mp, "toString"), num(14)),
     );
     mp.insert(
         'h',
-        format!("({})[{}]({})", num(17), str0(&mp, "toString"), num(18)),
+        format!("({})[{}]({})", num(17), str_static(&mp, "toString"), num(18)),
     );
     mp.insert(
         'm',
-        format!("({})[{}]({})", num(22), str0(&mp, "toString"), num(23)),
+        format!("({})[{}]({})", num(22), str_static(&mp, "toString"), num(23)),
     );
     mp.insert(
         'C',
         format!(
             "((()=>{{}})[{}]({})()({}))[{}]",
-            str0(&mp, "constructor"),
-            str0(&mp, "return escape"),
+            str_static(&mp, "constructor"),
+            str_static(&mp, "return escape"),
             mp.get(&'\\').unwrap(),
             num(2)
         ),
@@ -84,7 +84,7 @@ pub fn transpile(code: &str) -> String {
 
     format!(
         "(()=>{{}})[{}]({})()",
-        str0(&mp, "constructor"),
+        str_static(&mp, "constructor"),
         str(&mp, code)
     )
 }
